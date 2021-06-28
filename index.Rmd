@@ -1,7 +1,9 @@
 ---
 title: "Guia para ajustar modelos de curvas de crecimiento"
-author: "Mar J.F. Ollero & Ignacio Pardillo Gil"
-output: html_document
+author: 
+- Mar J.F. Ollero
+- Ignacio Pardillo Gil
+output: rmdformats::readthedown
 ---
 Esta página esta asociada a la presentación: <strong> Visión Crítica del Análisis de Varianza: Modelos de Curvas de Crecimiento como Alternativa para los Diseños de Medidas Repetidas </strong> que estuvo disponible del 9 de Julio al 11 de Julio de 2021 en el V Congreso Nacional de Psicología.
 
