@@ -13,9 +13,96 @@ La base de datos utilizada en la guía está extraida de: <em> Hoffman, L. (2015
 
 La base de datos utilizada como ejemplo recogió un total de 429 pacientes diagnosticados de fobia social severa. Pretendía comprobar el efecto de una terapia de inundación sobre dichos pacientes, la cual consistía en su participación en una exposición de 10 minutos sobre un tema previamente pactado, acudiendo como público estudiantes de prácticas. El número de sesiones aplicadas oscilaba entre 3 y 12, ya que existía la posibilidad de que los sujetos dejaran de asistir a las mismas en caso de manifestar ansiedad baja; dicho nivel era medido a través de una escala de 0 a 30 puntos que el sujeto debía completar durante la exposición en público, siendo considerada como baja una puntuación menor de 5. Por último, cabe destacar la medición de las expectativas de todos los participantes acerca de la terapia, a través de una escala del 0 al 10. 
 
+Si no está familiarizado con los modelos multinivel le recomendamos estos manuales: 
+- <em> Hoffman, L. (2015).Longitudinal analysis: Modeling within-person fluctuation and change. Routledge. </em>
+- <em> Pardo, A., & Ruíz, M.A. (2012). Análisis de datos en ciencias sociales y de la salud II.Síntesis, Madrid
+ </em>
+
+Queremos recordar que la manera de ajustar un modelo multinivel es mediante la comparación de diferentes modelos y finalmente la interpretación del modelo que mejor ajuste demuestra. En esta guía partimos del modelo nulo y vamos añadiendo diferentes efectos hasta llegar al modelo final. 
+
 # Modelo de curvas de crecimiento en SPSS
 # Modelo de curvas de cremiento en R studio 
+Necesitamos instalar el paquete `lme4` y `lmerTest`en el caso de que no lo tengamos: 
 
+```{r, eval=F}
+install.packages ("lme4")
+install.packages("lmerTest")
+```
+
+A continuación, cargamos los paquetes: 
+```{r, eval=T, message=F, warning=F}
+library (lme4)
+library (lmerTest)
+```
+
+También tenemos que cargar la base de datos. En nuestro caso la extensión del archivo es .txt. Si tus datos tienen otra extensión y no sabes como leerlos puedes consultar [aquí](https://bookdown.org/matiasandina/R-intro/leer-datos.html). Además, `lme4`, utiliza bases de datos en formato <strong> long </strong>. Si necesitas transformar tu base de datos de formato <strong> wide </strong> a formato <strong> long </strong>, puedes consultar [aquí](https://www.maximaformacion.es/blog-dat/como-modificar-el-formato-de-tus-datos-de-manera-sencilla/). 
+
+De esta manera cargamos la base de datos: 
+
+```{r, eval=T}
+data.long <- read.table ("Curvas de crecimiento.txt", header =T)
+```
+La estructura de la base de datos es esta: 
+```{r, eval=T, echo=F}
+head (data.long, n=30)
+data.long$id <- as.factor (data.long$id)
+```
+## Modelo nulo
+
+En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la `ansiedad`: 
+```{r, eval=T, echo=F}
+M.nulo <-  lmer(ansiedad ~ (1|id),data=data.long, REML=T)
+summary(M.nulo)
+```
+Con la información de este modelo, podemos evaluar si es necesario aplicar un modelo de curvas de crecimiento a estos datos mediante el cálculo del índice de correlación intraclase. 
+```{r, eval=T, echo=F}
+var.intersecciones <- 23.71
+var.residual <- 14.55
+ICC <- var.intersecciones/(var.intersecciones+var.residual); ICC
+```
+Como un 61.97% de la varianza se explica por diferencias entre individuos, tiene sentido aplicar un modelo de curvas de crecimiento a estos datos. En este modelo la intersección ("Intercept") solo informa de la media de `ansiedad` en la muestra. 
+
+
+## Modelo con intersecciones aleatorias y el tiempo como predictor lineal 
+
+```{r, eval=T, echo=F}
+M.intersecciones <-  lmer(ansiedad ~ sesion + (1|id),data=data.long, REML=T)
+summary (M.intersecciones)
+
+```
+Para saber comparar este modelo con el anterior: 
+```{r, eval=T, echo=F}
+anova (M.nulo,M.intersecciones)
+```
+Como esta comparación es significativa, un modelo de intersecciones aleatorias explica mejor la varianza de estos datos que un modelo nulo. 
+
+## Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal
+Ahora vamos a comprobar si el modelo que refleja diferencias en la manera que se produce el cambio en ansiedad de las personas ajusta mejor que el que solo tiene momentos iniciales distintos. 
+```{r, eval=T, echo=F}
+M.pendientes <-  lmer(ansiedad ~ sesion + (sesion|id),data=data.long, REML=T)
+summary (M.pendientes)
+
+```
+
+Para saber comparar este modelo con el anterior: 
+```{r, eval=T, echo=F}
+anova (M.intersecciones,M.pendientes)
+```
+Este modelo ajusta mejor que el anterior, por lo que la puntuación en ansiedad además de ser diferente para los participantes en el momento inicial y además el cambio en la puntuación de ansiedad a través del tiempo se produce de forma distinta en los participantes. 
+
+## Introduciendo variables de nivel 2
+Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la expectativa en el modelo. 
+
+```{r, eval=T, echo=F}
+M.final <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (sesion|id),data=data.long, REML=T)
+summary (M.final)
+
+```
+Para saber comparar este modelo con el anterior: 
+```{r, eval=T, echo=F}
+anova (M.pendientes, M.final)
+```
+Este modelo también es más explicativo que el anterior. Como este es el modelo final podemos proceder a su interpretación que es la siguiente: 
 
 
 

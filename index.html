@@ -1460,6 +1460,75 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
     
+        <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+      code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode { white-space: pre; position: relative; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      code.sourceCode { white-space: pre-wrap; }
+      code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+          background-color: #ffffff;
+          color: #a0a0a0;
+        }
+      pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+      div.sourceCode
+        { color: #1f1c1b; background-color: #ffffff; }
+      @media screen {
+      code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span. { color: #1f1c1b; } /* Normal */
+      code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+      code span.an { color: #ca60ca; } /* Annotation */
+      code span.at { color: #0057ae; } /* Attribute */
+      code span.bn { color: #b08000; } /* BaseN */
+      code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+      code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #924c9d; } /* Char */
+      code span.cn { color: #aa5500; } /* Constant */
+      code span.co { color: #898887; } /* Comment */
+      code span.cv { color: #0095ff; } /* CommentVar */
+      code span.do { color: #607880; } /* Documentation */
+      code span.dt { color: #0057ae; } /* DataType */
+      code span.dv { color: #b08000; } /* DecVal */
+      code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+      code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+      code span.fl { color: #b08000; } /* Float */
+      code span.fu { color: #644a9b; } /* Function */
+      code span.im { color: #ff5500; } /* Import */
+      code span.in { color: #b08000; } /* Information */
+      code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+      code span.op { color: #1f1c1b; } /* Operator */
+      code span.ot { color: #006e28; } /* Other */
+      code span.pp { color: #006e28; } /* Preprocessor */
+      code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+      code span.sc { color: #3daee9; } /* SpecialChar */
+      code span.ss { color: #ff5500; } /* SpecialString */
+      code span.st { color: #bf0303; } /* String */
+      code span.va { color: #0057ae; } /* Variable */
+      code span.vs { color: #bf0303; } /* VerbatimString */
+      code span.wa { color: #bf0303; } /* Warning */
+    </style>
     
     
     <!-- tabsets -->
@@ -1560,7 +1629,12 @@ document.addEventListener('DOMContentLoaded', function() {
     <div id="toc">
       <ul>
       <li><a href="#modelo-de-curvas-de-crecimiento-en-spss">Modelo de curvas de crecimiento en SPSS</a></li>
-      <li><a href="#modelo-de-curvas-de-cremiento-en-r-studio">Modelo de curvas de cremiento en R studio</a></li>
+      <li><a href="#modelo-de-curvas-de-cremiento-en-r-studio">Modelo de curvas de cremiento en R studio</a><ul>
+      <li><a href="#modelo-nulo">Modelo nulo</a></li>
+      <li><a href="#modelo-con-intersecciones-aleatorias-y-el-tiempo-como-predictor-lineal">Modelo con intersecciones aleatorias y el tiempo como predictor lineal</a></li>
+      <li><a href="#modelo-con-intersecciones-y-pendientes-aleatorias-y-el-tiempo-como-predictor-lineal">Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal</a></li>
+      <li><a href="#introduciendo-variables-de-nivel-2">Introduciendo variables de nivel 2</a></li>
+      </ul></li>
       </ul>
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
@@ -1578,11 +1652,218 @@ document.addEventListener('DOMContentLoaded', function() {
 <p>El objetivo de esta página es facilitar al investigador aplicado una guía para ajustar modelos de curvas de crecimiento a datos recogidos bajo diseños longitudinales. La guía está disponible para los softwares de Rstudio y de SPSS.</p>
 <p>La base de datos utilizada en la guía está extraida de: <em> Hoffman, L. (2015).Longitudinal analysis: Modeling within-person fluctuation and change. Routledge. </em></p>
 <p>La base de datos utilizada como ejemplo recogió un total de 429 pacientes diagnosticados de fobia social severa. Pretendía comprobar el efecto de una terapia de inundación sobre dichos pacientes, la cual consistía en su participación en una exposición de 10 minutos sobre un tema previamente pactado, acudiendo como público estudiantes de prácticas. El número de sesiones aplicadas oscilaba entre 3 y 12, ya que existía la posibilidad de que los sujetos dejaran de asistir a las mismas en caso de manifestar ansiedad baja; dicho nivel era medido a través de una escala de 0 a 30 puntos que el sujeto debía completar durante la exposición en público, siendo considerada como baja una puntuación menor de 5. Por último, cabe destacar la medición de las expectativas de todos los participantes acerca de la terapia, a través de una escala del 0 al 10.</p>
+<p>Si no está familiarizado con los modelos multinivel le recomendamos estos manuales: - <em> Hoffman, L. (2015).Longitudinal analysis: Modeling within-person fluctuation and change. Routledge. </em> - <em> Pardo, A., &amp; Ruíz, M.A. (2012). Análisis de datos en ciencias sociales y de la salud II.Síntesis, Madrid </em></p>
+<p>Queremos recordar que la manera de ajustar un modelo multinivel es mediante la comparación de diferentes modelos y finalmente la interpretación del modelo que mejor ajuste demuestra. En esta guía partimos del modelo nulo y vamos añadiendo diferentes efectos hasta llegar al modelo final.</p>
 <div id="modelo-de-curvas-de-crecimiento-en-spss" class="section level1">
 <h1>Modelo de curvas de crecimiento en SPSS</h1>
 </div>
 <div id="modelo-de-curvas-de-cremiento-en-r-studio" class="section level1">
 <h1>Modelo de curvas de cremiento en R studio</h1>
+<p>Necesitamos instalar el paquete <code>lme4</code> y <code>lmerTest</code>en el caso de que no lo tengamos:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span> (<span class="st">&quot;lme4&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">install.packages</span>(<span class="st">&quot;lmerTest&quot;</span>)</span></code></pre></div>
+<p>A continuación, cargamos los paquetes:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span> (lme4)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span> (lmerTest)</span></code></pre></div>
+<p>También tenemos que cargar la base de datos. En nuestro caso la extensión del archivo es .txt. Si tus datos tienen otra extensión y no sabes como leerlos puedes consultar <a href="https://bookdown.org/matiasandina/R-intro/leer-datos.html">aquí</a>. Además, <code>lme4</code>, utiliza bases de datos en formato <strong> long </strong>. Si necesitas transformar tu base de datos de formato <strong> wide </strong> a formato <strong> long </strong>, puedes consultar <a href="https://www.maximaformacion.es/blog-dat/como-modificar-el-formato-de-tus-datos-de-manera-sencilla/">aquí</a>.</p>
+<p>De esta manera cargamos la base de datos:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data.long &lt;-<span class="st"> </span><span class="kw">read.table</span> (<span class="st">&quot;Curvas de crecimiento.txt&quot;</span>, <span class="dt">header =</span>T)</span></code></pre></div>
+<p>La estructura de la base de datos es esta:</p>
+<pre><code>##    id sesion ansiedad expectativa
+## 1   1      1       17           5
+## 2   1      2       11           5
+## 3   1      3       10           5
+## 4   1      4        8           5
+## 5   1      5        6           5
+## 6   1      6        4           5
+## 7   1      7       NA           5
+## 8   1      8       NA           5
+## 9   1      9       NA           5
+## 10  1     10       NA           5
+## 11  1     11       NA           5
+## 12  1     12       NA           5
+## 13  2      1       21           6
+## 14  2      2       23           6
+## 15  2      3       22           6
+## 16  2      4       23           6
+## 17  2      5       23           6
+## 18  2      6       23           6
+## 19  2      7       21           6
+## 20  2      8       24           6
+## 21  2      9       22           6
+## 22  2     10       22           6
+## 23  2     11       23           6
+## 24  2     12       24           6
+## 25  3      1       16           2
+## 26  3      2       17           2
+## 27  3      3       11           2
+## 28  3      4       11           2
+## 29  3      5        8           2
+## 30  3      6        8           2</code></pre>
+<div id="modelo-nulo" class="section level2">
+<h2>Modelo nulo</h2>
+<p>En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la <code>ansiedad</code>:</p>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: ansiedad ~ (1 | id)
+##    Data: data.long
+## 
+## REML criterion at convergence: 26775.1
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.0341 -0.5580  0.0221  0.5592  3.4425 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  id       (Intercept) 23.71    4.869   
+##  Residual             14.55    3.814   
+## Number of obs: 4629, groups:  id, 429
+## 
+## Fixed effects:
+##             Estimate Std. Error       df t value Pr(&gt;|t|)    
+## (Intercept)  15.8969     0.2421 427.3147   65.67   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Con la información de este modelo, podemos evaluar si es necesario aplicar un modelo de curvas de crecimiento a estos datos mediante el cálculo del índice de correlación intraclase.</p>
+<pre><code>## [1] 0.6197073</code></pre>
+<p>Como un 61.97% de la varianza se explica por diferencias entre individuos, tiene sentido aplicar un modelo de curvas de crecimiento a estos datos. En este modelo la intersección (“Intercept”) solo informa de la media de <code>ansiedad</code> en la muestra.</p>
+</div>
+<div id="modelo-con-intersecciones-aleatorias-y-el-tiempo-como-predictor-lineal" class="section level2">
+<h2>Modelo con intersecciones aleatorias y el tiempo como predictor lineal</h2>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: ansiedad ~ sesion + (1 | id)
+##    Data: data.long
+## 
+## REML criterion at convergence: 25278.8
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -4.7963 -0.5507 -0.0162  0.5485  5.1217 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  id       (Intercept) 27.99    5.291   
+##  Residual             10.03    3.167   
+## Number of obs: 4629, groups:  id, 429
+## 
+## Fixed effects:
+##               Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)   19.49465    0.27324  518.59523   71.35   &lt;2e-16 ***
+## sesion        -0.61201    0.01428 4222.38510  -42.87   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##        (Intr)
+## sesion -0.309</code></pre>
+<p>Para saber comparar este modelo con el anterior:</p>
+<pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
+<pre><code>## Data: data.long
+## Models:
+## M.nulo: ansiedad ~ (1 | id)
+## M.intersecciones: ansiedad ~ sesion + (1 | id)
+##                  npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)    
+## M.nulo              3 26780 26799 -13387    26774                         
+## M.intersecciones    4 25279 25305 -12636    25271 1502.9  1  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Como esta comparación es significativa, un modelo de intersecciones aleatorias explica mejor la varianza de estos datos que un modelo nulo.</p>
+</div>
+<div id="modelo-con-intersecciones-y-pendientes-aleatorias-y-el-tiempo-como-predictor-lineal" class="section level2">
+<h2>Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal</h2>
+<p>Ahora vamos a comprobar si el modelo que refleja diferencias en la manera que se produce el cambio en ansiedad de las personas ajusta mejor que el que solo tiene momentos iniciales distintos.</p>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: ansiedad ~ sesion + (sesion | id)
+##    Data: data.long
+## 
+## REML criterion at convergence: 17573.5
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.2355 -0.5841  0.0233  0.6137  3.3263 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr 
+##  id       (Intercept) 13.760   3.709         
+##           sesion       1.028   1.014    -0.29
+##  Residual              1.096   1.047         
+## Number of obs: 4629, groups:  id, 429
+## 
+## Fixed effects:
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)  20.51354    0.18236 426.79867  112.49   &lt;2e-16 ***
+## sesion       -0.91559    0.04937 416.99979  -18.55   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##        (Intr)
+## sesion -0.300</code></pre>
+<p>Para saber comparar este modelo con el anterior:</p>
+<pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
+<pre><code>## Data: data.long
+## Models:
+## M.intersecciones: ansiedad ~ sesion + (1 | id)
+## M.pendientes: ansiedad ~ sesion + (sesion | id)
+##                  npar   AIC   BIC   logLik deviance  Chisq Df Pr(&gt;Chisq)    
+## M.intersecciones    4 25279 25305 -12635.6    25271                         
+## M.pendientes        6 17580 17618  -8783.8    17568 7703.6  2  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Este modelo ajusta mejor que el anterior, por lo que la puntuación en ansiedad además de ser diferente para los participantes en el momento inicial y además el cambio en la puntuación de ansiedad a través del tiempo se produce de forma distinta en los participantes.</p>
+</div>
+<div id="introduciendo-variables-de-nivel-2" class="section level2">
+<h2>Introduciendo variables de nivel 2</h2>
+<p>Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la expectativa en el modelo.</p>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: ansiedad ~ sesion + expectativa + sesion * expectativa + (sesion |  
+##     id)
+##    Data: data.long
+## 
+## REML criterion at convergence: 17541.9
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.2347 -0.5864  0.0216  0.6128  3.3093 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr 
+##  id       (Intercept) 13.7781  3.7119        
+##           sesion       0.9442  0.9717   -0.30
+##  Residual              1.0962  1.0470        
+## Number of obs: 4629, groups:  id, 429
+## 
+## Fixed effects:
+##                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)         20.49039    0.36112 424.61577  56.741  &lt; 2e-16 ***
+## sesion              -0.41078    0.09364 415.29619  -4.387 1.46e-05 ***
+## expectativa          0.00598    0.07756 427.24110   0.077    0.939    
+## sesion:expectativa  -0.12552    0.02014 419.95982  -6.231 1.13e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) sesion expctt
+## sesion      -0.311              
+## expectativa -0.863  0.269       
+## sesn:xpcttv  0.269 -0.863 -0.313</code></pre>
+<p>Para saber comparar este modelo con el anterior:</p>
+<pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
+<pre><code>## Data: data.long
+## Models:
+## M.pendientes: ansiedad ~ sesion + (sesion | id)
+## M.final: ansiedad ~ sesion + expectativa + sesion * expectativa + (sesion | id)
+##              npar   AIC   BIC  logLik deviance Chisq Df Pr(&gt;Chisq)    
+## M.pendientes    6 17580 17618 -8783.8    17568                        
+## M.final         8 17543 17594 -8763.3    17527 41.02  2  1.238e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Este modelo también es más explicativo que el anterior. Como este es el modelo final podemos proceder a su interpretación que es la siguiente:</p>
+</div>
 </div>
 </div>
 
