@@ -185,19 +185,19 @@ De esta manera cargamos la base de datos:
 data.long <- read.table ("Curvas de crecimiento.txt", header =T)
 ```
 La estructura de la base de datos es esta: 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 head (data.long, n=30)
 data.long$id <- as.factor (data.long$id)
 ```
 ## Modelo nulo
 
 En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la *ansiedad*: 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 M.nulo <-  lmer(ansiedad ~ (1|id),data=data.long)
 summary(M.nulo)
 ```
 Con la información de este modelo, podemos evaluar si es necesario aplicar un modelo de curvas de crecimiento a estos datos mediante el cálculo del índice de correlación intraclase. 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 var.intersecciones <- 23.71
 var.residual <- 14.55
 ICC <- var.intersecciones/(var.intersecciones+var.residual); ICC
@@ -207,7 +207,7 @@ Como un 61.97% de la varianza se explica por diferencias entre individuos, tiene
 
 ## Modelo con intersecciones aleatorias y el tiempo como predictor lineal 
 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 M.intersecciones <-  lmer(ansiedad ~ sesion + (1|id),data=data.long)
 summary (M.intersecciones)
 
@@ -215,18 +215,19 @@ summary (M.intersecciones)
 **Interpretación de los efectos fijos**  
 En esta parte se contrastan las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y las pendientes medias de las personas (es decir, el efecto del tiempo sobre las puntuaciones de ansiedad) son cero. Por otro lado, el coeficiente asociado a la variable *Sesión* permite estimar en qué grado cambia el nivel de ansiedad por cada sesión que avanzamos (en este caso, cómo disminuye 0,6 puntos el nivel de ansiedad por cada sesión en la que avanza el participante).  
 
-**Interpretación de los efectos aleatorios**
+**Interpretación de los efectos aleatorios**  
+
 Se contrastan las hipótesis nulas que afirman que las diferencias intrasujeto e intersujeto son cero. Mientras que la varianza de las intersecciones apenas cambiará, la pde los residuos deberá verse reducida si la variable independiente es significativa.  
 
 Para comparar este modelo con el anterior: 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 anova (M.nulo,M.intersecciones)
 ```
 Como esta comparación es significativa, el modelo de intersecciones aleatorias explica mejor la varianza de estos datos que el modelo nulo. 
 
 ## Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal
 Ahora vamos a comprobar si el modelo que refleja diferencias en la manera que se produce el cambio en ansiedad de las personas ajusta mejor que el que solo tiene momentos iniciales distintos. 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 M.pendientes <-  lmer(ansiedad ~ sesion + (sesion|id),data=data.long)
 summary (M.pendientes)
 
@@ -241,7 +242,7 @@ Apenas han cambiado puesto que nohemos introducido ningún efecto fijo nuevo. La
 La correlación entre la sesión y la intersección, al ser negativa, indica que cuanto mayor es la ansiedad en el momento inicial, mayor es el descenso de la misma a través de las sesiones. 
 
 Para comparar este modelo con el anterior: 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 anova (M.intersecciones,M.pendientes)
 ```
 Este modelo ajusta mejor que el anterior, por lo que la puntuación en ansiedad además de ser diferente para los participantes en el momento inicial y además el cambio en la puntuación de ansiedad a través del tiempo se produce de forma distinta en los participantes. 
@@ -249,7 +250,7 @@ Este modelo ajusta mejor que el anterior, por lo que la puntuación en ansiedad 
 ## Introduciendo variables de nivel 2
 Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la **expectativa** en el modelo. 
 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 M.var2 <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (sesion|id),data=data.long)
 summary (M.var2)
 
@@ -265,7 +266,7 @@ Se valora en qué medida se han reducido las varianzas al incluir variables expl
 
 
 Para comparar este modelo con el anterior: 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 anova (M.pendientes, M.var2)
 ```
 
@@ -277,7 +278,7 @@ Este modelo también es más explicativo que el anterior.
   
 Puesto que hemos conseguido explicar totalmente la varianza de las pendientes, este parámetro es cero y conviene eliminarlo para estimar el modelo final. Su estimación se hace de la siguiente manera: 
 
-```{r, eval=T, echo=F}
+```{r, eval=T}
 M.final <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (1|id),data=data.long)
 summary (M.final)
 

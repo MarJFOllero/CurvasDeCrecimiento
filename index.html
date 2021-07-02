@@ -1755,6 +1755,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <p>De esta manera cargamos la base de datos:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data.long &lt;-<span class="st"> </span><span class="kw">read.table</span> (<span class="st">&quot;Curvas de crecimiento.txt&quot;</span>, <span class="dt">header =</span>T)</span></code></pre></div>
 <p>La estructura de la base de datos es esta:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">head</span> (data.long, <span class="dt">n=</span><span class="dv">30</span>)</span></code></pre></div>
 <pre><code>##    id sesion ansiedad expectativa
 ## 1   1      1       17           5
 ## 2   1      2       11           5
@@ -1786,9 +1787,12 @@ document.addEventListener('DOMContentLoaded', function() {
 ## 28  3      4       11           2
 ## 29  3      5        8           2
 ## 30  3      6        8           2</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>data.long<span class="op">$</span>id &lt;-<span class="st"> </span><span class="kw">as.factor</span> (data.long<span class="op">$</span>id)</span></code></pre></div>
 <div id="modelo-nulo-1" class="section level2">
 <h2>Modelo nulo</h2>
 <p>En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la <em>ansiedad</em>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>M.nulo &lt;-<span class="st">  </span><span class="kw">lmer</span>(ansiedad <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>id),<span class="dt">data=</span>data.long)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">summary</span>(M.nulo)</span></code></pre></div>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
 ## Formula: ansiedad ~ (1 | id)
@@ -1812,11 +1816,16 @@ document.addEventListener('DOMContentLoaded', function() {
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Con la información de este modelo, podemos evaluar si es necesario aplicar un modelo de curvas de crecimiento a estos datos mediante el cálculo del índice de correlación intraclase.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>var.intersecciones &lt;-<span class="st"> </span><span class="fl">23.71</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>var.residual &lt;-<span class="st"> </span><span class="fl">14.55</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>ICC &lt;-<span class="st"> </span>var.intersecciones<span class="op">/</span>(var.intersecciones<span class="op">+</span>var.residual); ICC</span></code></pre></div>
 <pre><code>## [1] 0.6197073</code></pre>
 <p>Como un 61.97% de la varianza se explica por diferencias entre individuos, tiene sentido aplicar un modelo de curvas de crecimiento a estos datos. En este modelo la intersección (“Intercept”) solo informa de la media de <code>ansiedad</code> en la muestra.</p>
 </div>
 <div id="modelo-con-intersecciones-aleatorias-y-el-tiempo-como-predictor-lineal-1" class="section level2">
 <h2>Modelo con intersecciones aleatorias y el tiempo como predictor lineal</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>M.intersecciones &lt;-<span class="st">  </span><span class="kw">lmer</span>(ansiedad <span class="op">~</span><span class="st"> </span>sesion <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>id),<span class="dt">data=</span>data.long)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">summary</span> (M.intersecciones)</span></code></pre></div>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
 ## Formula: ansiedad ~ sesion + (1 | id)
@@ -1846,8 +1855,10 @@ document.addEventListener('DOMContentLoaded', function() {
 ## sesion -0.309</code></pre>
 <p><strong>Interpretación de los efectos fijos</strong><br />
 En esta parte se contrastan las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y las pendientes medias de las personas (es decir, el efecto del tiempo sobre las puntuaciones de ansiedad) son cero. Por otro lado, el coeficiente asociado a la variable <em>Sesión</em> permite estimar en qué grado cambia el nivel de ansiedad por cada sesión que avanzamos (en este caso, cómo disminuye 0,6 puntos el nivel de ansiedad por cada sesión en la que avanza el participante).</p>
-<p><strong>Interpretación de los efectos aleatorios</strong> Se contrastan las hipótesis nulas que afirman que las diferencias intrasujeto e intersujeto son cero. Mientras que la varianza de las intersecciones apenas cambiará, la pde los residuos deberá verse reducida si la variable independiente es significativa.</p>
+<p><strong>Interpretación de los efectos aleatorios</strong></p>
+<p>Se contrastan las hipótesis nulas que afirman que las diferencias intrasujeto e intersujeto son cero. Mientras que la varianza de las intersecciones apenas cambiará, la pde los residuos deberá verse reducida si la variable independiente es significativa.</p>
 <p>Para comparar este modelo con el anterior:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">anova</span> (M.nulo,M.intersecciones)</span></code></pre></div>
 <pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
 <pre><code>## Data: data.long
 ## Models:
@@ -1863,6 +1874,8 @@ En esta parte se contrastan las hipótesis nulas de que la intersección (es dec
 <div id="modelo-con-intersecciones-y-pendientes-aleatorias-y-el-tiempo-como-predictor-lineal-1" class="section level2">
 <h2>Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal</h2>
 <p>Ahora vamos a comprobar si el modelo que refleja diferencias en la manera que se produce el cambio en ansiedad de las personas ajusta mejor que el que solo tiene momentos iniciales distintos.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>M.pendientes &lt;-<span class="st">  </span><span class="kw">lmer</span>(ansiedad <span class="op">~</span><span class="st"> </span>sesion <span class="op">+</span><span class="st"> </span>(sesion<span class="op">|</span>id),<span class="dt">data=</span>data.long)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">summary</span> (M.pendientes)</span></code></pre></div>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
 ## Formula: ansiedad ~ sesion + (sesion | id)
@@ -1896,6 +1909,7 @@ En esta parte se contrastan las hipótesis nulas de que la intersección (es dec
 <p><strong>Interpretación de los efectos aleatorios</strong></p>
 <p>La correlación entre la sesión y la intersección, al ser negativa, indica que cuanto mayor es la ansiedad en el momento inicial, mayor es el descenso de la misma a través de las sesiones.</p>
 <p>Para comparar este modelo con el anterior:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">anova</span> (M.intersecciones,M.pendientes)</span></code></pre></div>
 <pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
 <pre><code>## Data: data.long
 ## Models:
@@ -1911,6 +1925,8 @@ En esta parte se contrastan las hipótesis nulas de que la intersección (es dec
 <div id="introduciendo-variables-de-nivel-2-1" class="section level2">
 <h2>Introduciendo variables de nivel 2</h2>
 <p>Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la <strong>expectativa</strong> en el modelo.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>M.var2 &lt;-<span class="st">  </span><span class="kw">lmer</span>(ansiedad <span class="op">~</span><span class="st"> </span>sesion <span class="op">+</span><span class="st"> </span>expectativa<span class="op">+</span><span class="st"> </span>sesion<span class="op">*</span>expectativa<span class="op">+</span><span class="st"> </span>(sesion<span class="op">|</span>id),<span class="dt">data=</span>data.long)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">summary</span> (M.var2)</span></code></pre></div>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
 ## Formula: ansiedad ~ sesion + expectativa + sesion * expectativa + (sesion |  
@@ -1949,6 +1965,7 @@ En esta parte se contrastan las hipótesis nulas de que la intersección (es dec
 <p><strong>Interpretación de los efectos aleatorios</strong></p>
 <p>Se valora en qué medida se han reducido las varianzas al incluir variables explicativas en el modelo. En este ejemplo concreto encontramos que todavía queda varianza de las intersecciones por explicar, sin embargo la <strong>expectativa</strong> consigue explicar totalmente la varianza de las pendientes. Aunque <code>lme4</code> no ofrece significación estadística para los efectos aleatorios vemos que el valor es muy pequeño y de hecho no alcanza la significación estadísitca.</p>
 <p>Para comparar este modelo con el anterior:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">anova</span> (M.pendientes, M.var2)</span></code></pre></div>
 <pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
 <pre><code>## Data: data.long
 ## Models:
@@ -1964,6 +1981,8 @@ En esta parte se contrastan las hipótesis nulas de que la intersección (es dec
 <div id="modelo-final-1" class="section level2">
 <h2>Modelo final</h2>
 <p>Puesto que hemos conseguido explicar totalmente la varianza de las pendientes, este parámetro es cero y conviene eliminarlo para estimar el modelo final. Su estimación se hace de la siguiente manera:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>M.final &lt;-<span class="st">  </span><span class="kw">lmer</span>(ansiedad <span class="op">~</span><span class="st"> </span>sesion <span class="op">+</span><span class="st"> </span>expectativa<span class="op">+</span><span class="st"> </span>sesion<span class="op">*</span>expectativa<span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>id),<span class="dt">data=</span>data.long)</span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">summary</span> (M.final)</span></code></pre></div>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
 ## Formula: ansiedad ~ sesion + expectativa + sesion * expectativa + (1 |      id)
