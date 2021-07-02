@@ -185,7 +185,7 @@ De esta manera cargamos la base de datos:
 data.long <- read.table ("Curvas de crecimiento.txt", header =T)
 ```
 La estructura de la base de datos es esta: 
-```{r, eval=T}
+```{r, eval=T, echo=F}
 head (data.long, n=30)
 data.long$id <- as.factor (data.long$id)
 ```
