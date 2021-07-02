@@ -20,7 +20,149 @@ Si no está familiarizado con los modelos multinivel le recomendamos estos manua
 
 Queremos recordar que la manera de ajustar un modelo multinivel es mediante la comparación de diferentes modelos y finalmente la interpretación del modelo que mejor ajuste demuestra. En esta guía partimos del modelo nulo y vamos añadiendo diferentes efectos hasta llegar al modelo final. 
 
+
+
 # Modelo de curvas de crecimiento en SPSS
+Un aspecto importante para tener en cuenta a la hora de aplicar modelos multinivel en SPSS es el formato de los datos. Definimos dos tipos: Long, donde cada medida del sujeto realizada en un determinado momento ocupa una fila, y Wide, donde las variables ocupan siempre las columnas y los sujetos cada fila. Mientras que el segundo es usado para los análisis de varianza, el primero es imprescindible para la aplicación de un modelo multinivel.  
+  
+<em> Formato Long de la base de datos de ejemplo </em>
+![](long.png)
+
+## Modelo nulo
+En primer lugar, ponemos a prueba el modelo nulo, similar a una regresión. El objetivo del mismo es calcular qué parte de la varianza de la variable dependiente (es decir, de las puntuaciones en ansiedad) es atribuible a las diferencias intrasujeto o intersujeto, lo cual permitirá determinar si es necesario considerar un modelo multinivel o si, por el contrario, conviene utilizar otros análisis más sencillos.
+
+Seleccionamos la opción **Modelos mixtos – Lineales** del menú **Analizar**, para acceder al cuadro de diálogo: *Modelos lineales mixtos especificar sujetos y medidas repetidas*.  
+
+![](mnulo1.png)
+  
+Seleccionamos la variable que recoge el número de identificación del sujeto y la arrastramos a la caja **Sujetos**. A continuación, aceptamos los cambios realizados:  
+![](mnulo2.png)  
+
+Arrastramos la variable *Ansiedad* (nuestra VI) a **Variable dependiente**. Las variables independientes serán incluidas en modelos posteriores.  
+
+![](mnulo3.png)  
+
+A continuación, pulsamos el botón **Estimación** y marcamos la casilla Máxima verosimilitud. Máxima verosimilitud restringida solo será empleada en caso de contar con una cantidad pequeña de sujetos, menor de 20.  
+
+![](mnulo4.png)  
+
+Volvemos a la pestaña anterior al presionar **Continuar** y pulsamos el botón **Estadísticos**. Marcamos las casillas *Resumen del procesamiento de los casos*, *Estimaciones de los parámetros para efectos fijos* y *Contrastes sobre los parámetros de covarianza*.  
+
+![](mnulo5.png)  
+
+Finalmente, volvemos a la pestaña anterior al presionar **Continuar** y pulsamos el botón **Aleatoria**. Arrastramos nuestra variable id desde **Sujetos** hasta **Combinaciones** y marcamos la casilla que aparece en la parte superior, la cual indica *Incluir intersecciones*. Pulsamos **Continuar** y aceptamos todos los cambios realizados para obtener los primeros análisis.  
+
+![](mnulo6.png)  
+
+Nos interesan las siguientes tablas:  
+
+•	*Criterios de información*, que incluye la desvianza del modelo, lo cual nos será útil para compararlo con futuros modelos multinivel.  
+
+•	*Efectos fijos* (tanto pruebas de efectos fijos como estimaciones de efectos fijos), que nos permite contrastar la hipótesis nula de que el nivel medio de ansiedad de las personas que participan en el estudio es igual a cero, así como ofrece una estimación de este valor.  
+
+![](mnulo7.png)  
+
+•	*Parámetros de covarianza*, también denominados efectos aleatorios. En este caso, se contrastan las hipótesis nulas de que las diferencias intrasujeto (o relativas a los momentos temporales, representadas en la tabla como residuos) e intersujeto (representadas en las tablas como intersección) son cero. Su rechazo nos permite concluir la importancia de emplear modelos multinivel.  
+
+![](mnulo8.png)  
+
+Para no basarnos solo en la significación estadística, conviene hacer el cálculo del índice de correlación intraclase, el cual no es ofrecido por el programa SPSS: nos permite conocer el grado en que la varianza total de las puntuaciones de los participantes depende de su propia variabilidad (es decir, de las diferencias entre medidas repetidas) y no de aspectos que les definen y los distinguen de otros participantes, como puede ser en este caso las expectativas u otros (sexo, edad, comorbilidad…). El cálculo se realiza de la siguiente forma:
+
+
+$$ICC= \frac{VAR (residuos)}{VAR (residuos)+ VAR (intersecciones)}$$
+  
+  
+Consideramos como relevantes valores superiores a 0,15.
+
+## Modelo con intersecciones aleatorias y el tiempo como predictor lineal 
+El siguiente modelo que ponemos a prueba incluye nuestra primera variable independiente, de nivel uno, es decir, el tiempo. Aquí se pueden incluir tantas variables de nivel uno como se desee. De nuevo, seleccionamos la opción **Modelos mixtos – Lineales** del menú **Analizar**, para acceder al cuadro de diálogo *Modelos lineales mixtos*: especificar sujetos y medidas repetidas. Presionamos **Continuar** y, a continuación, arrastramos nuestra variable independiente **Sesión** a la caja **Covariable**.  
+
+![](min1.png)  
+
+Pulsamos el botón **Fija** y arrastramos nuestra variable independiente hasta **Modelo** gracias al botón **Añadir**. Pulsamos **Continuar** y aceptamos todos los cambios realizados para obtener los resultados  
+
+![](min2.png)  
+
+Nos interesan las siguientes tablas:  
+
+•	*Criterios de información*. Gracias a estos datos compararemos el modelo ajustado previamente con el ajustado ahora. Debemos calcular a partir de esta información un estadístico denominado como razón de verosimilitudes, G2, que se distribuye según X2 con 1 grado de libertad en este caso. Los grados de libertad se calculan restando el número de parámetros de este modelo y el del anterior, información que aparece en la tabla superior Dimensión del modelo. El cálculo del estadístico se realiza de la siguiente forma:
+$$G2 = -2LL_ {Modelo1} – (-2LL_{Modelo2})$$
+Las dos cifras aparecen en la primera fila de la tabla Criterios de información de cada respectivo resultado. Deberemos atender a la tabla de Chi-cuadrado para comprobar si el valor del estadístico es lo suficientemente grande. En ese caso, se rechaza la hipótesis nula de que el nuevo modelo ajusta igual de bien que el anterior, y como consecuencia, nos quedamos con el último calculado. En caso de que el valor de G2 sea lo suficientemente bajo como para no poder rechazar la hipótesis nula, no continuamos realizando análisis estadísticos y nos quedamos con el modelo anterior.  
+
+![](min3.png)
+  
+  
+•	**Efectos fijos** (tanto pruebas de efectos fijos como estimaciones de efectos fijos). Por un lado, se contrastan las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y las pendientes medias de las personas (es decir, el efecto del tiempo sobre las puntuaciones de ansiedad) son cero. Por otro lado, el coeficiente asociado a la variable *Sesión* permite estimar en qué grado cambia el nivel de ansiedad por cada sesión que avanzamos (en este caso, cómo disminuye 0,6 puntos el nivel de ansiedad por cada sesión en la que avanza el participante).  
+
+![](min4.png)  
+
+•	**Parámetros de covarianza**, también denominados efectos aleatorios. Volvemos con el contraste de las hipótesis nulas que afirman que las diferencias intrasujeto e intersujeto son cero. Mientras que la segunda apenas cambiará, la primera sí, deberá verse reducida si la variable independiente es significativa.  
+
+![](min5.png)
+
+## Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal
+Tras conocer que el avance de las sesiones produce cambios sobre las puntuaciones en ansiedad de los participantes, queda determinar si dicho cambio es distinto en cada sujeto, es decir, si existe variabilidad intersujeto en el efecto del tiempo sobre la ansiedad, y no solo en el nivel de ansiedad como hemos evaluado hasta el momento. Los pasos a realizar, que son aplicables para cualquier variable de nivel uno, son los siguientes: seleccionamos la opción **Modelos mixtos – Lineales** del menú **Analizar**, para acceder al cuadro de diálogo *Modelos lineales mixtos: especificar sujetos* y medidas repetidas. Presionamos **Continuar** y, a continuación, pulsamos el botón **Aleatoria**. Arrastramos nuestra variable independiente hasta **Modelo** gracias al botón **Añadir**. Además, accedemos al desplegable que tiene como opción por defecto **Componentes de la varianza**, situado en la parte de arriba del cuadro de diálogo Efectos aleatorios. Elegimos la opción **Sin estructura**. Pulsamos **Continuar** y aceptamos todos los cambios realizados para obtener los resultados.  
+
+![](mp1.png)  
+
+![](mp2.png)  
+
+Nos interesan las siguientes tablas:  
+
+•	**Criterios de información**. De nuevo, gracias a estos datos compararemos el modelo ajustado previamente con el ajustado ahora. Calculamos el estadístico de razón de verosimilitudes, G2, que se distribuye según X2 con 2 grado de libertad en este caso. Recordamos la fórmula:
+$$G2 = -2LL_ {Modelo1} – (-2LL_{Modelo2})$$
+  
+En ese caso, se rechaza la hipótesis nula de que el nuevo modelo ajusta igual de bien que el anterior, y como consecuencia, nos quedamos con el último calculado.  
+
+![](mp3.png)  
+
+•	**Efectos fijos** (tanto pruebas de efectos fijos como estimaciones de efectos fijos). No ha habido apenas cambios puesto que no hemos añadido nuevos efectos fijos.  
+
+![](mp4.png)  
+
+•	**Parámetros de covarianza**, también denominados efectos aleatorios. Atendemos a cuatro fuentes de variación en este caso, las cuales debemos evaluar si son o no significativas.  
+
+La varianza error de nivel uno, denominada en la tabla como residual y referida a diferencias intrasujeto; la varianza intersujeto en las puntuaciones de ansiedad al inicio del tratamiento, denominada como intersección NE(1,1); la varianza intersujeto de las pendientes de regresión que relacionan el tiempo con las puntuaciones de ansiedad, denominada como intersección NE (2,1); y covarianza entre intersecciones y pendientes, que permite comprobar si mayores o menores niveles de ansiedad al inicio implican un mayor o menor efecto del tiempo sobre dichos niveles a lo largo del paso de las sesiones. Aunque su interpretación excede esta breve guía sobre cómo realizar un análisis multinivel, pondremos un ejemplo claro para entender a qué puede referirse este apartado.  
+
+Una covarianza negativa indica que los participantes con bajos niveles de ansiedad al inicio del tratamiento presentan una mayor mejora a lo largo de las sesiones, mientras que una covarianza positiva (como es el caso) señala que el efecto de la intervención a lo largo del tiempo es mayor en personas con altos niveles de ansiedad al inicio de la terapia.  
+
+![](mp5.png)
+
+## Introduciendo variables de nivel 2
+
+Para finalizar, incluiremos un último modelo a tener en cuenta (aunque podemos seguir introduciendo modelos que incluyan aspectos más complejos). Ahora, tenemos en cuenta variables de nivel dos, es decir, relativas al individuo, como puede ser el sexo, la edad, comorbilidad o, en este caso, las expectativas con respecto a la terapia. De nuevo, seleccionamos la opción **Modelos mixtos – Lineales** del menú **Analizar**, para acceder al cuadro de diálogo *Modelos lineales mixtos: especificar sujetos y medidas repetidas*. Presionamos **Continuar** y, a continuación, arrastramos nuestra variable independiente **Expectativas** a la caja **Covariable**. En caso de tratarse de una variable categórica, debemos llevarla a la caja **Factores**.  
+
+![](mf1.png)  
+
+Pulsamos el botón **Fija** y arrastramos esta nueva variable independiente hasta **Modelo** gracias al botón **Añadir**. Es posible incluir un efecto de la interacción entre las dos variables independientes si seleccionamos ambas manteniendo la tecla *Ctrl* y las incluimos a la vez gracias al botón **Añadir** que aparece en el cuadro. En este caso, no consideraremos la interacción. Pulsamos **Continuar** y aceptamos todos los cambios realizados para obtener los resultados.  
+
+![](mf2.png)  
+
+Nos interesan las siguientes tablas:  
+
+•	**Criterios de información**. De nuevo, gracias a estos datos compararemos el modelo ajustado previamente con el ajustado ahora. Calculamos el estadístico de razón de verosimilitudes, G2, que se distribuye según X2 con 2 grado de libertad en este caso. Recordamos la fórmula:
+$$G2 = -2LL_ {Modelo1} – (-2LL_{Modelo2})$$
+
+  
+En ese caso, se rechaza la hipótesis nula de que el nuevo modelo ajusta igual de bien que el anterior, y como consecuencia, nos quedamos con el último calculado.  
+
+![](mf3.png)  
+
+•	**Efectos fijos** (tanto pruebas de efectos fijos como estimaciones de efectos fijos). Por un lado, se contrastan de nuevo las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y el efecto del tiempo son cero. Añadimos además la hipótesis nula sobre el efecto nulo de las expectativas sobre los niveles de ansiedad. La tabla de Estimaciones de efectos fijos permiten hacer predicciones sobre los niveles medios de ansiedad en los participantes en base a sus expectativas y la sesión en la que se encuentran.  
+
+![](mf4.png)  
+
+•	**Parámetros de covarianza**, también denominados efectos aleatorios. De nuevo, se valora si son nulos los siguientes parámetros: la varianza error de nivel uno o diferencias intrasujeto, la varianza intersujeto en las puntuaciones de ansiedad al inicio del tratamiento, la varianza intersujeto de las pendientes de regresión que relacionan el tiempo con las puntuaciones de ansiedad y la covarianza entre intersecciones y pendientes.  
+
+![](mf5.png)  
+
+## Modelo final
+
+Puede darse el caso en el que, la introducción de variables de nivel 1 y 2 acaben reduciendo a cero los componentes de la varianza intersujeto, recogidos en la fila de intersección. En nuestro ejemplo, ya desde el modelo anterior, hemos comprobado que la variabilidad de las pendientes o NE (2,1) no es estadísticamente significativa, es decir, que el efecto del tiempo es el mismo para todos los sujetos. Es por ello que conviene crear un nuevo modelo que elimine este aspecto, más simple, siguiendo estos pasos:  
+
+Seleccionamos **Modelos mixtos – Lineales** del menú **Analizar**, para acceder al cuadro de diálogo Modelos lineales mixtos: especificar sujetos y medidas repetidas. Presionamos **Continuar** y, a continuación, pulsamos el botón **Aleatoria**. Eliminamos del cuadro Modelo la variable de nivel uno, **Sesión**, puesto que sus efectos aleatorios han sido reducidos (por tanto, es un parámetro que vale cero y no necesita ser incluido). Esto simplifica los resultados a considerar.
+
+
 # Modelo de curvas de cremiento en R studio 
 Necesitamos instalar el paquete `lme4` y `lmerTest`en el caso de que no lo tengamos: 
 
@@ -49,9 +191,9 @@ data.long$id <- as.factor (data.long$id)
 ```
 ## Modelo nulo
 
-En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la `ansiedad`: 
+En primer lugar, ajustamos el modelo nulo, que solo incluye la variable dependiente del estudio, la *ansiedad*: 
 ```{r, eval=T, echo=F}
-M.nulo <-  lmer(ansiedad ~ (1|id),data=data.long, REML=T)
+M.nulo <-  lmer(ansiedad ~ (1|id),data=data.long)
 summary(M.nulo)
 ```
 Con la información de este modelo, podemos evaluar si es necesario aplicar un modelo de curvas de crecimiento a estos datos mediante el cálculo del índice de correlación intraclase. 
@@ -66,43 +208,82 @@ Como un 61.97% de la varianza se explica por diferencias entre individuos, tiene
 ## Modelo con intersecciones aleatorias y el tiempo como predictor lineal 
 
 ```{r, eval=T, echo=F}
-M.intersecciones <-  lmer(ansiedad ~ sesion + (1|id),data=data.long, REML=T)
+M.intersecciones <-  lmer(ansiedad ~ sesion + (1|id),data=data.long)
 summary (M.intersecciones)
 
 ```
-Para saber comparar este modelo con el anterior: 
+**Interpretación de los efectos fijos**  
+En esta parte se contrastan las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y las pendientes medias de las personas (es decir, el efecto del tiempo sobre las puntuaciones de ansiedad) son cero. Por otro lado, el coeficiente asociado a la variable *Sesión* permite estimar en qué grado cambia el nivel de ansiedad por cada sesión que avanzamos (en este caso, cómo disminuye 0,6 puntos el nivel de ansiedad por cada sesión en la que avanza el participante).  
+
+**Interpretación de los efectos aleatorios**
+Se contrastan las hipótesis nulas que afirman que las diferencias intrasujeto e intersujeto son cero. Mientras que la varianza de las intersecciones apenas cambiará, la pde los residuos deberá verse reducida si la variable independiente es significativa.  
+
+Para comparar este modelo con el anterior: 
 ```{r, eval=T, echo=F}
 anova (M.nulo,M.intersecciones)
 ```
-Como esta comparación es significativa, un modelo de intersecciones aleatorias explica mejor la varianza de estos datos que un modelo nulo. 
+Como esta comparación es significativa, el modelo de intersecciones aleatorias explica mejor la varianza de estos datos que el modelo nulo. 
 
 ## Modelo con intersecciones y pendientes aleatorias y el tiempo como predictor lineal
 Ahora vamos a comprobar si el modelo que refleja diferencias en la manera que se produce el cambio en ansiedad de las personas ajusta mejor que el que solo tiene momentos iniciales distintos. 
 ```{r, eval=T, echo=F}
-M.pendientes <-  lmer(ansiedad ~ sesion + (sesion|id),data=data.long, REML=T)
+M.pendientes <-  lmer(ansiedad ~ sesion + (sesion|id),data=data.long)
 summary (M.pendientes)
 
 ```
+  
+**Interpretación de los efectos fijos**  
 
-Para saber comparar este modelo con el anterior: 
+Apenas han cambiado puesto que nohemos introducido ningún efecto fijo nuevo. La interpretación del apartado anterior es válida.  
+
+**Interpretación de los efectos aleatorios**  
+
+La correlación entre la sesión y la intersección, al ser negativa, indica que cuanto mayor es la ansiedad en el momento inicial, mayor es el descenso de la misma a través de las sesiones. 
+
+Para comparar este modelo con el anterior: 
 ```{r, eval=T, echo=F}
 anova (M.intersecciones,M.pendientes)
 ```
 Este modelo ajusta mejor que el anterior, por lo que la puntuación en ansiedad además de ser diferente para los participantes en el momento inicial y además el cambio en la puntuación de ansiedad a través del tiempo se produce de forma distinta en los participantes. 
 
 ## Introduciendo variables de nivel 2
-Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la expectativa en el modelo. 
+Ahora que sabemos que la puntuación en ansiedad empieza en valores diferentes y disminuye de manera diferente en cada persona, podemos intentar explicar a qué se debe esa variabilidad entre los sujetos introduciendo la **expectativa** en el modelo. 
 
 ```{r, eval=T, echo=F}
-M.final <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (sesion|id),data=data.long, REML=T)
+M.var2 <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (sesion|id),data=data.long)
+summary (M.var2)
+
+```
+**Interpretación de los efectos fijos**  
+
+Por un lado, se contrastan de nuevo las hipótesis nulas de que la intersección (es decir, nivel medio de ansiedad en los participantes) y el efecto del tiempo son cero. Añadimos además la hipótesis nula sobre el efecto nulo de las expectativas sobre los niveles de ansiedad. La estimaciones de efectos fijos permiten hacer predicciones sobre los niveles medios de ansiedad en los participantes en base a sus expectativas y la sesión en la que se encuentran.
+
+
+**Interpretación de los efectos aleatorios**  
+
+Se valora en qué medida se han reducido las varianzas al incluir variables explicativas en el modelo. En este ejemplo concreto encontramos que todavía queda varianza de las intersecciones por explicar, sin embargo la **expectativa** consigue explicar totalmente la varianza de las pendientes. Aunque `lme4` no ofrece significación estadística para los efectos aleatorios vemos que el valor es muy pequeño y de hecho no alcanza la significación estadísitca.  
+
+
+Para comparar este modelo con el anterior: 
+```{r, eval=T, echo=F}
+anova (M.pendientes, M.var2)
+```
+
+
+Este modelo también es más explicativo que el anterior. 
+
+
+## Modelo final
+  
+Puesto que hemos conseguido explicar totalmente la varianza de las pendientes, este parámetro es cero y conviene eliminarlo para estimar el modelo final. Su estimación se hace de la siguiente manera: 
+
+```{r, eval=T, echo=F}
+M.final <-  lmer(ansiedad ~ sesion + expectativa+ sesion*expectativa+ (1|id),data=data.long)
 summary (M.final)
 
 ```
-Para saber comparar este modelo con el anterior: 
-```{r, eval=T, echo=F}
-anova (M.pendientes, M.final)
-```
-Este modelo también es más explicativo que el anterior. Como este es el modelo final podemos proceder a su interpretación que es la siguiente: 
+
+
 
 
 
